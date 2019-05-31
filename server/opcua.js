@@ -25,9 +25,10 @@ var userIdentity = {
  var nodesArr =[]
 /*_________________________________________________________*/
 
-function dataObj(nodeId, value){
+function dataObj(nodeId, value, time){
 	this.nodeId = nodeId,
-	this.value = value
+	this.value = value,
+	this.time = time
 }
 
 /*_________________________________________________________*/
@@ -145,11 +146,12 @@ function dataObj(nodeId, value){
 				monitoredItem.on("changed", (dataValue)=> {
 					var nodeId = (monitoredItem.itemToMonitor.nodeId.value.toString());
 						value =  dataValue.value.value
+						time = dataValue.serverTimestamp.toString()
 
 				    // console.log("_____________________________NEW___________________________________")
 				    // console.log(nodeId, '=', value)
 
-			    	socket.emit('newData', new dataObj(nodeId, value))
+			    	socket.emit('newData', new dataObj(nodeId, value, time))
 
 				})
 				//return dataValue.statusCode
