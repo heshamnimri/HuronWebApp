@@ -1,9 +1,16 @@
+module.exports = function HURON () {
+
 const opcua = require("node-opcua"); 
 const async = require("async");
+const openSocket = require('socket.io-client');
+
+
+
 
 var nodesub = "ns=2;s=Huron_CNC.Position"
 
 const endpointUrl = "opc.tcp://132.246.138.160:49330"
+const socket = openSocket('ws://localhost:4001');
 
 const client = new opcua.OPCUAClient();
 let the_session, the_subscription;
@@ -15,7 +22,15 @@ var userIdentity = {
       password: 'nrc'
 };
 
-module.exports = function HURON (socket) {
+ var nodesArr =[]
+/*_________________________________________________________*/
+
+function dataObj(nodeId, value){
+	this.nodeId = nodeId,
+	this.value = value
+}
+
+/*_________________________________________________________*/
 
 
 	async.series([
@@ -52,28 +67,33 @@ module.exports = function HURON (socket) {
 			    if(!err) {
 			    	if(browseResult.statusCode.name == 'Good')
 			    	{
-			    		console.log('Good Node')
+			    		console.log('Good Path')
 				        	browseResult.references.forEach( (node)=> {
-				            nodes.push((node.nodeId.toString()))
+				         //   	nodesArr.push(new nodeObj ((node.nodeId.toString())))
+				         		nodesArr.push((node.nodeId.toString()))
 			    		})
 			    	}
-					
+			    }else {
+			    	console.log("Bad Path")
 			    }
-			    callback(err);
-			    console.log(nodes);
+
+			    
+			    console.log(nodesArr);
 			    console.log("*************BROWSE************")
+			    callback(err);
 			});
 	    },
 
 	 
 	  //   // step 5: install a subscription and install a monitored item for 10 seconds
 	    function(callback) {
+	    	console.log('subscribe')
 			//subnode = node.slice(7)
 			the_subscription=new opcua.ClientSubscription(the_session, {
 		    requestedPublishingInterval: 1000,
 		    requestedLifetimeCount: 10,
-		    requestedMaxKeepAliveCount: 100,
-		    maxNotificationsPerPublish: 100,
+		    requestedMaxKeepAliveCount: 2,
+		    maxNotificationsPerPublish: 10,
 		    publishingEnabled: true,
 		    priority: 10
 		});
@@ -86,14 +106,21 @@ module.exports = function HURON (socket) {
 		   console.log("terminated");
 		});
 
+	
 		// setTimeout( function() {
 		//     the_subscription.terminate(callback);
 		// }, 10*1000);
 
 		// install monitored item
-		
-			
-		nodes.forEach( (node)=> {
+/*____________________________________________________________________________________________*/
+
+/*____________________________________________________________________________________________*/
+
+	//Add initial state vlaue fetch 
+
+/*____________________________________________________________________________________________*/
+
+		nodesArr.forEach( (node)=> {
 
 			var status;
 			var monitoredItem  = the_subscription.monitor(
@@ -102,7 +129,7 @@ module.exports = function HURON (socket) {
 			        attributeId: opcua.AttributeIds.Value
 			    },
 			    {
-			        samplingInterval: 100,
+			        samplingInterval: 1000,
 			        discardOldest: true,
 			        queueSize: 10
 			    },
@@ -110,14 +137,26 @@ module.exports = function HURON (socket) {
 
 			    )
 
-				monitoredItem.on("changed", (dataValue)=> {
-			    // console.log(` ${node.slice(7)} = `, dataValue.value.value, '@ time: ',(dataValue.serverTimestamp.toString()));
-				socket.emit("NewData", (` ${node.slice(7)} = `, dataValue.value.value, '@ time: ',(dataValue.serverTimestamp.toString()))
-					})
+				// monitoredItem.on("initialized", (initValue)=> {
+			 //    console.log("____________________________INIT____________________________________")
+			 //    console.log(monitoredItem.itemToMonitor.nodeId.value.toString(), '=', initValue.value.value)
+				// })
 
+				monitoredItem.on("changed", (dataValue)=> {
+					var nodeId = (monitoredItem.itemToMonitor.nodeId.value.toString());
+						value =  dataValue.value.value
+
+				    // console.log("_____________________________NEW___________________________________")
+				    // console.log(nodeId, '=', value)
+
+			    	socket.emit('newData', new dataObj(nodeId, value))
+
+				})
 				//return dataValue.statusCode
 
 		})
+		
+/*____________________________________________________________________________________________*/
 
 	},
 
@@ -144,3 +183,5 @@ module.exports = function HURON (socket) {
 
 
 }
+
+

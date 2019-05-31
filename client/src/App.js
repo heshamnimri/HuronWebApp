@@ -5,29 +5,41 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      response: false,
-      endpoint: "http://127.0.0.1:4001"
+      nodeId: false,
+      value: false,
+      endpoint: "http://localhost:4001"
     };
   }
 
   componentDidMount() {
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
-    socket.on("FromAPI", data => this.setState({ response: data }));
+    socket.on("dataForward", (data) => {
+         this.setState({ nodeId: data.nodeId, value: data.value })
+     });
   }
 
   render() {
-    const { response } = this.state;
+    const { nodeId, value } = this.state;
     return (
         <div style={{ textAlign: "center" }}>
-          {response
-              ? <p>
-                The temperature in Florence is: {response} °F
-              </p>
-              : <p>Loading...</p>}
+
+          <p>{nodeId} = {value} </p>
+
+          <p>Y AXIS</p>
+          <p>Z AXIS</p>
+          <p>A AXIS</p>
+          <p>C AXIS</p>
         </div>
+
     );
   }
 }
 
 export default App;
+
+          // {nodeId
+          //     ? <p>
+          //       The temperature in Florence is: {nodeId} °F
+          //     </p>
+          //     : <p>Loading...</p>}
