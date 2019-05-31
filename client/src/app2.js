@@ -7,13 +7,12 @@ class App extends Component {
     this.state = {
       nodeId: false,
       value: false,
-      endpoint: "http://localhost:4001"
     };
   }
 
   componentDidMount() {
-    const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
+    //const { endpoint } = this.state;
+    const socket = socketIOClient("http://localhost:4001");
     socket.on("dataForward", (data) => {
          this.setState({ nodeId: data.nodeId, value: data.value })
      });
@@ -29,7 +28,7 @@ class App extends Component {
           <p>Y AXIS</p>
           <p>Z AXIS</p>
           <p>A AXIS</p>
-          <p></p>
+          <p>C AXIS</p>
         </div>
 
     );
