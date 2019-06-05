@@ -16,6 +16,7 @@ const client = new opcua.OPCUAClient();
 let the_session, the_subscription;
 
 var nodes = []
+var empty = null;
 
 var userIdentity = {
       userName: 'nrc',
@@ -102,6 +103,7 @@ function dataObj(nodeId, value, time){
 		the_subscription.on("started", function() {
 		    console.log("subscription started for 2 seconds - subscriptionId=",the_subscription.subscriptionId);
 		}).on("keepalive", function() {
+			socket.emit('keepalive',empty)
 		    console.log("keepalive");
 		}).on("terminated", function() {
 		   console.log("terminated");
@@ -143,18 +145,15 @@ function dataObj(nodeId, value, time){
 			 //    console.log(monitoredItem.itemToMonitor.nodeId.value.toString(), '=', initValue.value.value)
 				// })
 
-				monitoredItem.on("changed", (dataValue)=> {
+				monitoredItem.on("changed", (dataValue)=> {			//Emits message to socket server everytime there is a change 
 					var nodeId = (monitoredItem.itemToMonitor.nodeId.value.toString());
 						value =  dataValue.value.value
 						time = dataValue.serverTimestamp.toString()
 
-				    // console.log("_____________________________NEW___________________________________")
-				    // console.log(nodeId, '=', value)
 
-			    	socket.emit('newData', new dataObj(nodeId, value, time))
+			    	socket.emit('newData', new dataObj(nodeId, value, time))		
 
 				})
-				//return dataValue.statusCode
 
 		})
 		

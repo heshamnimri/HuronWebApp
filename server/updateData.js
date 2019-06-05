@@ -1,10 +1,10 @@
 var Axis = {
 
-	X:{'value': 111, 'time' : '' }, 
-	Y:{'value': 111, 'time' : '' }, 
-	Z:{'value': 111, 'time' : '' }, 
-	A:{'value': 111, 'time' : '' }, 
-	C:{'value': 111, 'time' : '' } 
+	X:{'value': 0, 'time' : '' }, 
+	Y:{'value': 0, 'time' : '' }, 
+	Z:{'value': 0, 'time' : '' }, 
+	A:{'value': 0, 'time' : '' }, 
+	C:{'value': 0, 'time' : '' } 
 	
 	}
 
