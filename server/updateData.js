@@ -1,51 +1,117 @@
-var Axis = {
+var MachineAxis = {
 
-	X:{'value': 0, 'time' : '' }, 
-	Y:{'value': 0, 'time' : '' }, 
-	Z:{'value': 0, 'time' : '' }, 
-	A:{'value': 0, 'time' : '' }, 
-	C:{'value': 0, 'time' : '' } 
+	X:{'position': 0, 'current': 0, 'time' : '' }, 
+	Y:{'position': 0, 'current': 0, 'time' : '' }, 
+	Z:{'position': 0, 'current': 0, 'time' : '' }, 
+	A:{'position': 0, 'current': 0, 'time' : '' }, 
+	C:{'position': 0, 'current': 0, 'time' : '' } 
 	
 	}
+var err = "parameter not defined"
 
 
 module.exports = function UPDATE (data) {
-	var node = data.nodeId.slice(19); 	//A
-	var value = data.value;		//1234
+	var axis = data.nodeId.slice(-4,-3); 	//X|Y|Z|A|C
+	var dataType = data.nodeId.slice(-3)    //pos|curr
+	var value = data.value;		
+	var time = data.time;
 
-	switch(node)  {
+	switch(axis)  {
 
 		case 'X':
-			Axis.X.value = data.value;
-			Axis.X.time = data.time; 
+			switch(dataType){
+				case 'cur':
+					MachineAxis.X.current = value;
+					MachineAxis.X.time = time;
+				break;
+
+				case 'pos':
+					MachineAxis.X.position = value;
+					MachineAxis.X.time = time;
+				break; 
+
+				default: 
+					throw err; 
+			}
 
 		break; 
 
 		case 'Y':
-			Axis.Y.value = data.value;
-			Axis.Y.time = data.time;  
+			switch(dataType){
+				case 'cur':
+					MachineAxis.Y.current = value;
+					MachineAxis.Y.time = time;
+				break;
+
+				case 'pos':
+					MachineAxis.Y.position = value;
+					MachineAxis.Y.time = time;
+				break; 
+
+				default: 
+					throw err; 
+			}
+
 		break;
 
 		case 'Z':
-			Axis.Z.value = data.value;
-			Axis.Z.time = data.time;
+			switch(dataType){
+				case 'cur':
+					MachineAxis.Z.current = value;
+					MachineAxis.Z.time = time;
+				break; 
+
+				case 'pos':
+					MachineAxis.Z.position = value;
+					MachineAxis.Z.time = time;
+				break; 
+
+				default: 
+					throw err; 
+			}
+
 		break; 
 
 		case 'A':
-			Axis.A.value = data.value;
-			Axis.A.time = data.time;
+			switch(dataType){
+				case 'cur':
+					MachineAxis.A.current = value;
+					MachineAxis.A.time = time;
+				break;
+
+				case 'pos':
+					MachineAxis.A.position = value;
+					MachineAxis.A.time = time;
+				break; 
+
+				default: 
+					throw err; 
+			}
 		break; 
 
 		case 'C':
-			Axis.C.value = data.value;
-			Axis.C.time = data.time;
+			switch(dataType){
+				case 'cur':
+					MachineAxis.C.current = value;
+					MachineAxis.C.time = time;
+				break; 
+
+				case 'pos':
+					MachineAxis.C.position = value;
+					MachineAxis.C.time = time;
+				break; 
+
+				default: 
+					throw err; 
+			}
+
 		break;  
 
 		default: 
-			throw err; 
+			throw "no AXIS"; 
 	}
 
-	return Axis
+	return MachineAxis
 
 
 }
@@ -64,18 +130,18 @@ UPDATE(data2)*/
 var newDataNodeId = newData.nodeId //Huron_CNC.Position.D
 
 
-if(Axis.newDataNodeId){		//existing node
-	Axis.newDataNodeId.value = _newValue_   //update value and time 
-	Axis.newDataNodeId.time = _newTime_
+if(MachineAxis.newDataNodeId){		//existing axis
+	MachineAxis.newDataNodeId.value = _newValue_   //update value and time 
+	MachineAxis.newDataNodeId.time = _newTime_
 } else {							//else append to JSON
-	Axis.appendChild()
+	MachineAxis.appendChild()
 }*/
 /*
 
 switch (newDataNodeId) {
 	case 'Huron_CNC.Position.X' :
-		Axis.newDataNodeId.value = newData.value
+		MachineAxis.newDataNodeId.value = newData.value
 	break; 
 	default: 
-		Axis.appendChild
+		MachineAxis.appendChild
 }*/

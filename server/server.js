@@ -4,7 +4,7 @@ const socket = require("socket.io");
 const opcuaHuron = require("./opcua.js")
 const updateData = require("./updateData")
 
-const port = 4001;
+const port = 2000;
 const index = require("./routes/index");
 
 const app = express();

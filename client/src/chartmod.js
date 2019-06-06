@@ -50,13 +50,7 @@ class Chartmod extends Component {
             }
           }
         ],
-        yAxes: [{
-            ticks:{
-              suggestedMin:0,
-              suggestedMax:100
-            }
-          }
-        ]
+
       }
     }
   };
@@ -65,7 +59,7 @@ class Chartmod extends Component {
 
 
   updateChart = (e) => {
-    console.log("-------------UPDATE--------------")
+    //console.log("-------------UPDATE--------------")
     //const oldXDataSet = this.state.lineChartData.datasets[0];
     const newXDataSet = this.state.lineChartData.datasets[0];  //set to old dataset then append new vlaue
     newXDataSet.data.push(this.props.data)
@@ -74,7 +68,7 @@ class Chartmod extends Component {
     var con= this.state.lineChartData.labels.concat(
         new Date().toLocaleTimeString())
     var newtime = con.slice(-50)
-    console.log(newtime)
+    //console.log(newtime)
     
 
     // var numValues = this.state.lineChartData.labels.length; 
@@ -96,6 +90,7 @@ class Chartmod extends Component {
 
   componentDidMount() {
     this.props.socketFor(this.updateChart)
+    console.log(this.props.classes)
 
   }
 
@@ -122,3 +117,12 @@ export default withStyles(styles, { withTheme: true })(Chartmod);
       //     options={this.state.lineChartOptions}
       //   />
       // </div>
+
+
+        //       yAxes: [{
+        //     ticks:{
+        //       suggestedMin:0,
+        //       suggestedMax:this.props.ymax
+        //     }
+        //   }
+        // ]

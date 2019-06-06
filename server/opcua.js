@@ -7,10 +7,10 @@ const openSocket = require('socket.io-client');
 
 
 
-var nodesub = "ns=2;s=Huron_CNC.Position"
+var nodesub = "ns=2;s=Huron_CNC.Axis"
 
 const endpointUrl = "opc.tcp://132.246.138.160:49330"
-const socket = openSocket('ws://localhost:4001');
+const socket = openSocket('ws://localhost:2000');
 
 const client = new opcua.OPCUAClient();
 let the_session, the_subscription;
@@ -92,7 +92,7 @@ function dataObj(nodeId, value, time){
 	    	console.log('subscribe')
 			//subnode = node.slice(7)
 			the_subscription=new opcua.ClientSubscription(the_session, {
-		    requestedPublishingInterval: 1000,
+		    requestedPublishingInterval: 50,
 		    requestedLifetimeCount: 10,
 		    requestedMaxKeepAliveCount: 2,
 		    maxNotificationsPerPublish: 10,
@@ -132,7 +132,7 @@ function dataObj(nodeId, value, time){
 			        attributeId: opcua.AttributeIds.Value
 			    },
 			    {
-			        samplingInterval: 1000,
+			        samplingInterval: 50,
 			        discardOldest: true,
 			        queueSize: 10
 			    },
@@ -150,7 +150,7 @@ function dataObj(nodeId, value, time){
 						value =  dataValue.value.value
 						time = dataValue.serverTimestamp.toString()
 
-
+				//console.log(new dataObj(nodeId, value, time))
 			    	socket.emit('newData', new dataObj(nodeId, value, time))		
 
 				})
