@@ -132,7 +132,7 @@ function dataObj(nodeId, value, time){
 			        attributeId: opcua.AttributeIds.Value
 			    },
 			    {
-			        samplingInterval: 50,
+			        samplingInterval: 10,
 			        discardOldest: true,
 			        queueSize: 10
 			    },
