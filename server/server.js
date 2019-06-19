@@ -3,8 +3,9 @@ const http = require("http");
 const socket = require("socket.io");
 const opcuaHuron = require("./opcua.js")
 const updateData = require("./updateData")
+const { serverPort } = require("./config")
 
-const port = 2000;
+const port = serverPort;
 const index = require("./routes/index");
 
 const app = express();

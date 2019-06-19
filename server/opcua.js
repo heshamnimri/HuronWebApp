@@ -2,6 +2,7 @@ module.exports = function HURON () {
 
 const opcua = require("node-opcua"); 
 const async = require("async");
+const { CNCendpoint , serverPort } = require("./config")
 const openSocket = require('socket.io-client');
 
 
@@ -9,8 +10,8 @@ const openSocket = require('socket.io-client');
 
 var nodesub = "ns=2;s=Huron_CNC.Axis"
 
-const endpointUrl = "opc.tcp://132.246.138.160:49330"
-const socket = openSocket('ws://localhost:2000');
+const endpointUrl = CNCendpoint;
+const socket = openSocket(`ws://localhost:${serverPort}`);
 
 const client = new opcua.OPCUAClient();
 let the_session, the_subscription;

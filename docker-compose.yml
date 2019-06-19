@@ -7,13 +7,13 @@ services:
     volumes: 
       - ./server:/usr/src/app 
     ports: 
-      - 2000:2000
+      - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
 
   client: 
     build: ./client
     volumes: 
       - ./client:/usr/src/app 
     ports: 
-      - 3000:3000
+      - ${REACT_APP_PORT}:${REACT_APP_PORT}
     depends_on: 
       - server
