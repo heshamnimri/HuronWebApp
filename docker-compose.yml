@@ -4,14 +4,14 @@ services:
 ###############################
 #   Setup mongo container
 # ###############################
-  # mongod:
-  #   image: mongo
-  #   expose:
-  #     - "27017"
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - /var/lib/mongodb:/data/db
+  mongod:
+    image: mongo
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"
+    volumes:
+      - /var/lib/mongodb:/data/db
 
 ################################
 #   Setup server container
@@ -22,6 +22,10 @@ services:
       - ./server:/usr/src/app 
     ports: 
       - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
+    expose:
+      - ${APP_SERVER_PORT}
+    depends_on:
+      - mongod
 
 ###############################
 #   Setup client container

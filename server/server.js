@@ -53,7 +53,7 @@ io.on("connection", socket => {			//when a connection is made to the server sock
 
 	socket.on("keepalive", (e)=> {		//E
 		//console.log(Axis)
-		//mongo.logdata(Axis);
+		//mongo.obj2arr(Axis);
 		io.sockets.emit('dataForward',Axis)
 		//console.log('====================')
 	});

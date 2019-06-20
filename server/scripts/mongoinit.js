@@ -4,7 +4,7 @@ var dataArr;
 
 class MONGO {
 	startDB () {
-		mongoose.connect('mongodb://localhost/CNChuron');
+		mongoose.connect('mongodb://132.246.138.196/CNChuron');
 		mongoose.connection.once('open', function(){
 		    console.log('Connection has been made to mongo');
 		}).on('error', function(error){
