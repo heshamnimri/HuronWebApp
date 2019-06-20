@@ -1,7 +1,21 @@
 version: '3'
 
 services: 
-  
+###############################
+#   Setup mongo container
+# ###############################
+  # mongod:
+  #   image: mongo
+  #   expose:
+  #     - "27017"
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - /var/lib/mongodb:/data/db
+
+################################
+#   Setup server container
+############################### 
   server: 
     build: ./server
     volumes: 
@@ -9,6 +23,9 @@ services:
     ports: 
       - ${APP_SERVER_PORT}:${APP_SERVER_PORT}
 
+###############################
+#   Setup client container
+###############################
   client: 
     build: ./client
     volumes: 
@@ -17,3 +34,7 @@ services:
       - ${REACT_APP_PORT}:${REACT_APP_PORT}
     depends_on: 
       - server
+
+#APP_SERVER_PORT are enviroment variables stored in the
+#.env file in the same folder level as docker-compose. 
+#no need to use dotenv as docker automatically looks for it 

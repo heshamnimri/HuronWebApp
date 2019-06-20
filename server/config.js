@@ -1,3 +1,5 @@
+//Abstracts away enviroment variables for use in the server workspace
+
 const dotenv = require('dotenv')
 dotenv.config();
 

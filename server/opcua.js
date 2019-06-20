@@ -2,8 +2,10 @@ module.exports = function HURON () {
 
 const opcua = require("node-opcua"); 
 const async = require("async");
+const MONGO = require ("./scripts/mongoinit")
 const { CNCendpoint , serverPort } = require("./config")
 const openSocket = require('socket.io-client');
+
 
 
 
@@ -24,7 +26,8 @@ var userIdentity = {
       password: 'nrc'
 };
 
- var nodesArr =[]
+ var nodesArr =[];
+ var mongo = new MONGO ;
 /*_________________________________________________________*/
 
 function dataObj(nodeId, value, time){
@@ -38,14 +41,17 @@ function dataObj(nodeId, value, time){
 
 	async.series([
 
-	    // step 1 : connect to
+
+	    // step 1 : connect to sever and mongo db
 	    function(callback)  {
 
 			client.connect(endpointUrl, function (err) {
 			    if(err) {
 			        console.log(" cannot connect to endpoint :" , endpointUrl );
 			    } else {
+			    	mongo.startDB();
 			        console.log("connected !");
+
 			    }
 			    callback(err);
 			});
@@ -149,7 +155,8 @@ function dataObj(nodeId, value, time){
 				monitoredItem.on("changed", (dataValue)=> {			//Emits message to socket server everytime there is a change 
 					var nodeId = (monitoredItem.itemToMonitor.nodeId.value.toString());
 						value =  dataValue.value.value
-						time = dataValue.serverTimestamp.toString()
+						UNIX = (dataValue.serverTimestamp).getTime() //converts time to UNIX Epoch time (milliseco)
+						time = UNIX     							//(new Date(time)).toString() <-- back to normal time
 
 				//console.log(new dataObj(nodeId, value, time))
 			    	socket.emit('newData', new dataObj(nodeId, value, time))		

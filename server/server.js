@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const socket = require("socket.io");
 const opcuaHuron = require("./opcua.js")
-const updateData = require("./updateData")
+const updateData = require("./scripts/updateData")
 const { serverPort } = require("./config")
 
 const port = serverPort;
@@ -13,6 +13,11 @@ app.use(index);
 const server = app.listen(port, ()=> {
 	console.log(`listening on port ${port}`)
 })
+
+const MONGO = require ("./scripts/mongoinit")
+var mongo = new MONGO;
+mongo.startDB();
+
 
 var Axis
 var startup = false; 
@@ -42,13 +47,15 @@ io.on("connection", socket => {			//when a connection is made to the server sock
 	socket.on("newData", (data) =>{		
 		Axis = updateData(data);
 		console.log(Axis)
+		mongo.obj2arr(Axis);
 		io.sockets.emit('dataForward',Axis)
 	});
 
 	socket.on("keepalive", (e)=> {		//E
-		console.log(Axis)
+		//console.log(Axis)
+		//mongo.logdata(Axis);
 		io.sockets.emit('dataForward',Axis)
-		console.log('====================')
+		//console.log('====================')
 	});
 
 
